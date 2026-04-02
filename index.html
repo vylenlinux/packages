@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>Vylen Linux :: Packages</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+
+    <body>
+        <div class="container">
+            <main>
+                <header>
+                    <div class="logo">
+                        <h1>Vylen Linux</h1>
+                    </div>
+
+                    <p class="subtitle">A modern Linux distribution</p>
+
+                    <div class="stats">
+                        <div class="stat">
+                            <div class="stat-value" id="total-packages">-</div>
+                            <div class="stat-label">Packages</div>
+                        </div>
+
+                        <div class="stat">
+                            <div class="stat-value" id="total-repos">-</div>
+                            <div class="stat-label">Repos</div>
+                        </div>
+
+                        <div class="stat">
+                            <div class="stat-value" id="loaded-repos">0</div>
+                            <div class="stat-label">Loaded</div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="controls">
+                    <div class="search-box">
+                        <label for="search"></label>
+                        <input type="text" id="search" placeholder="Search packages..." autocomplete="off" disabled />
+
+                        <span class="search-shortcut">/</span>
+                    </div>
+
+                    <label for="sort-by"></label>
+
+                    <select id="sort-by" disabled>
+                        <option value="name">Name</option>
+                        <option value="version">Version</option>
+                        <option value="maintainer">Maintainer</option>
+                    </select>
+                </div>
+
+                <div class="repo-tabs" id="repo-tabs"></div>
+
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading repositories...</p>
+                </div>
+
+                <div id="error" class="error hidden"></div>
+
+                <div class="package-list hidden" id="package-list">
+                    <div id="packages-container"></div>
+
+                    <div class="scroll-sentinel hidden" id="sentinel">
+                        <button class="load-more-btn">Load more</button>
+                    </div>
+                </div>
+
+                <div id="empty-state" class="empty-state hidden">
+                    <div class="empty-state-icon">🔍</div>
+
+                    <h3>No packages found</h3>
+                    <p>Try adjusting your search</p>
+                </div>
+            </main>
+
+            <footer>
+                <div class="footer-content">
+                    <div class="footer-brand">
+                        <div class="footer-brand-icon">
+                            <img src="https://gitlab.com/vylen/artworks/-/raw/main/png/round_colored.png" alt="vylen" />
+                        </div>
+
+                        <div>
+                            <div style="font-weight: 600;">Vylen Linux</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">Source-based, crafted with care</div>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                        © <span id="year"></span> Vylen Linux
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Package</h2>
+                    <button class="close-btn">&times;</button>
+                </div>
+
+                <div class="modal-body" id="modal-body"></div>
+            </div>
+        </div>
+
+        <div class="toast" id="toast">Copied!</div>
+        <button class="theme-toggle">🌓</button>
+
+        <script type="module" src="dist/main.js"></script>
+
+        <script>
+            document.getElementById('year').textContent = `${new Date().getFullYear()}`;
+        </script>
+    </body>
+</html>
