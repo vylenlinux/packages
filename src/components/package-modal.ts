@@ -22,6 +22,7 @@ export class PackageModal {
     private title: HTMLElement;
     private body: HTMLElement;
     private clipboard: ClipboardService;
+    private scrollPosition: number = 0;
 
     private readonly onDependencyClick: (dep: string) => void;
 
@@ -36,6 +37,7 @@ export class PackageModal {
     }
 
     show(pkg: Package): void {
+        this.scrollPosition = window.scrollY;
         window.location.hash = pkg.name;
 
         const gitlabUrl: string = `${GITLAB_BASE}/${pkg._repo}/-/tree/main/${pkg.name}`;
@@ -144,9 +146,10 @@ export class PackageModal {
 
     close(): void {
         this.modal.classList.remove('active');
-
         document.body.style.overflow = '';
-        window.location.hash = '';
+
+        history.pushState('', document.title, (window.location.pathname + window.location.search));
+        window.scrollTo(0, this.scrollPosition);
     }
 
     private initListeners(): void {
