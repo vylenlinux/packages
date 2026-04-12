@@ -41,8 +41,6 @@ export class PackageModal {
         window.location.hash = pkg.name;
 
         const gitlabUrl: string = `${GITLAB_BASE}/${pkg._repo}/-/tree/main/${pkg.name}`;
-        const deps: string[] = pkg.depends || [];
-
         this.title.textContent = pkg.name;
 
         this.body.innerHTML = `
@@ -119,10 +117,18 @@ export class PackageModal {
             </div>
 
             <div class="detail-row">
-                <div class="detail-label">Dependencies (${deps.length})</div>
+                <div class="detail-label">Dependencies (${pkg.depends.length})</div>
 
                 <div class="detail-value depends-list">
-                    ${deps.length ? deps.map((d: string): string => `<span class="tag dependency" data-dep="${escapeHtml(d)}">${escapeHtml(d)}</span>`).join('') : '<span style="color: var(--text-secondary);">None</span>'}
+                    ${pkg.depends.length ? pkg.depends.map((d: string): string => `<span class="tag dependency" data-dep="${escapeHtml(d)}">${escapeHtml(d)}</span>`).join('') : '<span style="color: var(--text-secondary);">None</span>'}
+                </div>
+            </div>
+
+            <div class="detail-row">
+                <div class="detail-label">Required By (${pkg.required_by.length})</div>
+
+                <div class="detail-value depends-list">
+                    ${pkg.required_by.length ? pkg.required_by.map((d: string): string => `<span class="tag dependency" data-dep="${escapeHtml(d)}">${escapeHtml(d)}</span>`).join('') : '<span style="color: var(--text-secondary);">None</span>'}
                 </div>
             </div>
         `;

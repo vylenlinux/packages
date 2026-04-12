@@ -9,6 +9,7 @@ export interface PackageData {
     maintainer: string | null;
     homepage: string | null;
     depends: string[];
+    required_by: string[];
 }
 
 export interface Package extends PackageData {
