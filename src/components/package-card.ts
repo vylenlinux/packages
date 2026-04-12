@@ -79,11 +79,6 @@ export class PackageCard {
                     Source
                 </a>
             </div>
-
-            <div class="package-tags">
-                ${depsPreview.map((d: string): string => `<span class="tag dependency">${escapeHtml(d)}</span>`).join('')}
-                ${depsMore ? `<span class="tag">${depsMore} more</span>` : ''}
-            </div>
         `;
 
         div.addEventListener('click', (): void => this.onClick(pkg));

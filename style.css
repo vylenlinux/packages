@@ -606,19 +606,6 @@ select {
     height: 16px;
 }
 
-.package-tags {
-    display: flex;
-    gap: .4rem;
-    flex-wrap: wrap;
-    margin-top: .75rem;
-}
-
-@media (min-width: 768px) {
-    .package-tags {
-        gap: .5rem;
-    }
-}
-
 .tag {
     background: var(--bg-tertiary);
     padding: .2rem .4rem;
