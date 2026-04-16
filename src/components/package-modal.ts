@@ -24,15 +24,12 @@ export class PackageModal {
     private clipboard: ClipboardService;
     private scrollPosition: number = 0;
 
-    private readonly onDependencyClick: (dep: string) => void;
-
-    constructor(onDependencyClick: (dep: string) => void) {
+    constructor() {
         this.modal = document.getElementById('modal')!;
         this.title = document.getElementById('modal-title')!;
         this.body = document.getElementById('modal-body')!;
         this.clipboard = new ClipboardService();
 
-        this.onDependencyClick = onDependencyClick;
         this.initListeners();
     }
 
@@ -145,7 +142,7 @@ export class PackageModal {
                 const dep: string = (e.target as HTMLElement).dataset.dep!;
 
                 this.close();
-                this.onDependencyClick(dep);
+                window.location.hash = dep;
             });
         });
     }

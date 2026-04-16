@@ -102,15 +102,7 @@ class App {
             this.modal.show(pkg);
         });
 
-        this.modal = new PackageModal((dep: string): void => {
-            this.state.activeRepo = 'all';
-            this.repoTabs.setActive('all');
-
-            this.searchBar.setValue(dep);
-            this.state.searchQuery = dep.toLowerCase();
-            this.filterAndRender();
-            this.searchBar.focus();
-        });
+        this.modal = new PackageModal();
 
         this.searchBar = new SearchBar((query: string): void => {
             this.state.searchQuery = query;
