@@ -76,6 +76,11 @@ export class PackageModal {
                 </div>
             ` : ''}
 
+            <div class="detail-row">
+                <div class="detail-label">Last Modified</div>
+                <div class="detail-value">${escapeHtml(pkg.last_update)}</div>
+            </div>
+
             <div class="detail-install">
                 <div class="detail-label">Install Command</div>
                 <code>emerald install ${pkg.name}</code>

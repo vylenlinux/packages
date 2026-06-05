@@ -10,6 +10,7 @@ export interface PackageData {
     homepage: string | null;
     depends: string[];
     required_by: string[];
+    last_update: string;
 }
 
 export interface Package extends PackageData {
