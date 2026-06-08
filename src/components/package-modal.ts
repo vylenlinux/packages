@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import {
-    Package, PackageSource
+    Package,
+    PackageSource
 } from '../models/package.js';
 
 import {
