@@ -18,6 +18,37 @@
     --shadow: 0 4px 6px -1px rgba(0,0,0,.3);
     --radius: 12px;
     --vylen: green;
+
+    --surface-elevated: rgba(255,255,255,0.03);
+    --border-subtle: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.12);
+    --text-tertiary: #666;
+    --font-mono: 'SF Mono', Monaco, monospace;
+    --source-color-url: #3b82f6;
+    --source-color-git: #f59e0b;
+    --source-color-file: #10b981;
+    --source-color-rename: #8b5cf6;
+
+    --source-bg-url: color-mix(in srgb, var(--source-color-url) 12%, transparent);
+    --source-bg-git: color-mix(in srgb, var(--source-color-git) 12%, transparent);
+    --source-bg-file: color-mix(in srgb, var(--source-color-file) 12%, transparent);
+    --source-bg-rename: color-mix(in srgb, var(--source-color-rename) 12%, transparent);
+
+    --source-badge-url: color-mix(in srgb, var(--source-color-url) 13%, transparent);
+    --source-badge-git: color-mix(in srgb, var(--source-color-git) 13%, transparent);
+    --source-badge-file: color-mix(in srgb, var(--source-color-file) 13%, transparent);
+    --source-badge-rename: color-mix(in srgb, var(--source-color-rename) 13%, transparent);
+
+    --source-surface: var(--surface-elevated, rgba(255, 255, 255, 0.03));
+    --source-border: var(--border-subtle, rgba(255, 255, 255, 0.06));
+    --source-border-hover: var(--border-hover, rgba(255, 255, 255, 0.12));
+
+    --source-font-mono: var(--font-mono, 'SF Mono', Monaco, 'Cascadia Code', 'Fira Code', monospace);
+    --source-text-primary: var(--text-primary, #e8e8e8);
+    --source-text-secondary: var(--text-secondary, #a0a0a0);
+    --source-text-tertiary: var(--text-tertiary, #666666);
+    --source-accent: var(--accent, #4f9cf0);
+    --source-surface-hover: rgba(255, 255, 255, 0.06);
 }
 
 [data-theme="light"] {
@@ -149,7 +180,7 @@ h1 {
     }
 }
 
-.stat-label {
+.stat-label {    display: none;
     font-size: .75rem;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -247,7 +278,6 @@ h1 {
 }
 
 select {
-    padding: .625rem .75rem;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-color);
     border-radius: 8px;
@@ -258,7 +288,7 @@ select {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b949e' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right .5rem center;
-    padding-right: 2rem;
+    padding: .625rem 2rem .625rem .75rem;
 }
 
 @media (min-width: 768px) {
@@ -273,7 +303,6 @@ select {
     gap: .5rem;
     margin-bottom: 1rem;
     flex-wrap: wrap;
-    display: none;
 }
 
 .repo-tabs.loaded {
@@ -1056,4 +1085,174 @@ footer {
 
 .hidden {
     display: none !important;
+}
+
+.sources-section .detail-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.sources-section .detail-label svg {
+    vertical-align: -2px;
+}
+
+.sources-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.sources-list .no-sources {
+    color: var(--source-text-secondary);
+}
+
+.source-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--source-surface);
+    border: 1px solid var(--source-border);
+    border-radius: 8px;
+    transition: border-color 0.2s ease;
+}
+
+.source-item:hover {
+    border-color: var(--source-border-hover);
+}
+
+.source-icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    margin-top: 1px;
+}
+
+.source-icon--url {
+    background: var(--source-bg-url);
+    color: var(--source-color-url);
+}
+
+.source-icon--git {
+    background: var(--source-bg-git);
+    color: var(--source-color-git);
+}
+
+.source-icon--file {
+    background: var(--source-bg-file);
+    color: var(--source-color-file);
+}
+
+.source-icon--rename {
+    background: var(--source-bg-rename);
+    color: var(--source-color-rename);
+}
+
+.source-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.source-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.2rem;
+}
+
+.source-type-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.source-type-badge--url {
+    background: var(--source-badge-url);
+    color: var(--source-color-url);
+}
+
+.source-type-badge--git {
+    background: var(--source-badge-git);
+    color: var(--source-color-git);
+}
+
+.source-type-badge--file {
+    background: var(--source-badge-file);
+    color: var(--source-color-file);
+}
+
+.source-type-badge--rename {
+    background: var(--source-badge-rename);
+    color: var(--source-color-rename);
+}
+
+.source-index {
+    font-size: 0.7rem;
+    color: var(--source-text-tertiary);
+}
+
+.source-url {
+    font-size: 0.82rem;
+    font-family: var(--source-font-mono), sans-serif;
+    color: var(--source-text-primary);
+    word-break: break-all;
+    line-height: 1.4;
+}
+
+.source-url a {
+    color: var(--source-accent);
+    text-decoration: none;
+}
+
+.source-url a:hover {
+    text-decoration: underline;
+}
+
+.source-rename {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--source-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.source-rename svg {
+    flex-shrink: 0;
+}
+
+.source-rename code {
+    background: var(--source-surface);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+.source-copy-btn {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--source-text-tertiary);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    margin-top: 1px;
+}
+
+.source-copy-btn:hover {
+    background: var(--source-surface-hover);
+    color: var(--source-text-primary);
 }
