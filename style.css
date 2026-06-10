@@ -180,7 +180,7 @@ h1 {
     }
 }
 
-.stat-label {    display: none;
+.stat-label {
     font-size: .75rem;
     color: var(--text-secondary);
     text-transform: uppercase;
