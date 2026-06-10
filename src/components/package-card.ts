@@ -20,6 +20,7 @@ import {
 export class PackageCard {
     private clipboard: ClipboardService;
     private readonly onClick: (pkg: Package) => void;
+    private copyTimeout: ReturnType<typeof setTimeout> | null = null;
 
     constructor(onClick: (pkg: Package) => void) {
         this.clipboard = new ClipboardService();
@@ -31,8 +32,6 @@ export class PackageCard {
         div.className = 'package-item';
 
         const deps: string[] = (pkg.depends || []);
-        const depsPreview: string[] = deps.slice(0, 2);
-        const depsMore: string = ((deps.length > 2) ? `+${deps.length - 2}` : '');
         const gitlabUrl: string = `${GITLAB_BASE}/${pkg._repo}/-/tree/main/${pkg.name}`;
 
         div.innerHTML = `
@@ -88,8 +87,15 @@ export class PackageCard {
         cmdBtn?.addEventListener('click', (e: Event): void => {
             e.stopPropagation();
 
+            if (cmdBtn.classList.contains('copied')) return;
+            if (this.copyTimeout) clearTimeout(this.copyTimeout);
+
             const cmd: string = `emerald install ${pkg.name}`;
             this.clipboard.copyWithFeedback(cmd, cmdBtn as HTMLElement).then((): void => console.log('Copied!'));
+
+            this.copyTimeout = setTimeout((): void => {
+                cmdBtn.classList.remove('copied');
+            }, 2000);
         });
 
         return div;
