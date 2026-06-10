@@ -418,18 +418,6 @@ select {
     overflow: hidden;
 }
 
-.package-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: var(--vylen);
-    opacity: 0;
-    transition: opacity .2s;
-}
-
 .package-item:hover::before {
     opacity: 1;
 }
