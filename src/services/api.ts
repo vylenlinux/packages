@@ -20,24 +20,30 @@ export class ApiService {
                 const response: Response = await fetch(url);
 
                 if (!response.ok) {
-                    console.warn(`HTTP ${response.status}`);
+                    console.warn(`Failed to load ${name}: HTTP ${response.status}`);
+                    onProgress(loadedCount, repos.length);
+
                     return [];
                 }
 
                 const data: unknown = await response.json();
 
                 if (!Array.isArray(data)) {
-                    console.warn("Invalid repo format");
+                    console.warn(`Failed to load ${name}: Invalid repo format`);
+                    onProgress(loadedCount, repos.length);
+
                     return [];
                 }
+
+                loadedCount++;
+                onProgress(loadedCount, repos.length);
 
                 return data.map((pkg: PackageData): Package => this.enrichPackage(pkg, name));
             } catch (err) {
                 console.warn(`Failed to load ${name}:`, err);
-                return [];
-            } finally {
-                loadedCount++;
                 onProgress(loadedCount, repos.length);
+
+                return [];
             }
         };
 
