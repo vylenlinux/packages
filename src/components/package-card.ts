@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 CELESTIFYX Team
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import {
+import type {
     Package
 } from '../models/package.js';
 
@@ -61,7 +61,7 @@ export class PackageCard {
                     emerald install ${escapeHtml(pkg.name)}
                 </div>
 
-                <a href="${gitlabUrl}" target="_blank" rel="noopener" class="gitlab-link" onclick="event.stopPropagation()">
+                <a href="${gitlabUrl}" target="_blank" rel="noopener" class="gitlab-link" onclick="stopPropagation()">
                     <svg width="16" height="16" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                         <polygon points="16 28.896 16 28.896 21.156 13.029 10.844 13.029 16 28.896" style="fill:#e24329" />
                         <polygon points="16 28.896 10.844 13.029 3.619 13.029 16 28.896" style="fill:#fc6d26" />

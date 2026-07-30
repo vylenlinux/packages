@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import {
-    AppState,
     initialState,
-    SortBy
+
+    type AppState,
+    type SortBy
 } from './models/state.js';
 
 import {
@@ -39,7 +40,7 @@ import {
     initTheme
 } from './utils/theme.js';
 
-import {
+import type {
     Package
 } from "./models/package.js";
 
@@ -166,7 +167,7 @@ class App {
         const hash: string = window.location.hash.slice(1);
 
         if (hash) {
-            const pkg: Package | undefined = this.state.allPackages.find((p: Package): boolean => p.name === hash);
+            const pkg: Package | undefined = this.state.allPackages.find((p: Package): boolean => (p.name === hash));
             if (pkg) this.modal.show(pkg);
         }
 
@@ -178,7 +179,7 @@ class App {
                 return;
             }
 
-            const pkg: Package | undefined = this.state.allPackages.find((p: Package): boolean => p.name === name);
+            const pkg: Package | undefined = this.state.allPackages.find((p: Package): boolean => (p.name === name));
             if (pkg) this.modal.show(pkg);
         });
     }

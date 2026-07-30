@@ -1,7 +1,7 @@
 // SPDX-FileCopyrightText: 2023 CELESTIFYX Team
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import {
+import type {
     SortBy
 } from '../models/state.js';
 
@@ -25,10 +25,6 @@ export class SearchBar {
     enable(): void {
         this.input.disabled = false;
         this.select.disabled = false;
-    }
-
-    setValue(value: string): void {
-        this.input.value = value;
     }
 
     focus(): void {

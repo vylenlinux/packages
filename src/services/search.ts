@@ -1,12 +1,12 @@
 // SPDX-FileCopyrightText: 2023 CELESTIFYX Team
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-import {
+import type {
     AppState,
     SortBy
 } from '../models/state.js';
 
-import {
+import type {
     Package
 } from '../models/package.js';
 
@@ -29,16 +29,12 @@ export class SearchService {
             switch(sortBy) {
                 case 'name':
                     return a.name.localeCompare(b.name);
-
                 case 'version':
                     return (b.version || '').localeCompare(a.version || '');
-
                 case 'maintainer':
                     return (a.maintainer || 'Unknown').localeCompare(b.maintainer || 'Unknown');
-
                 default:
                     return 0;
-
             }
         });
     }

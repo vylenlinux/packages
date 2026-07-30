@@ -5,7 +5,7 @@ import {
     REPO_CONFIG
 } from '../models/repository.js';
 
-import {
+import type {
     Package
 } from '../models/package.js';
 
@@ -47,7 +47,7 @@ export class RepoTabs {
         const counts: Record<string, number> = {};
 
         packages.forEach((pkg: Package): void => {
-            counts[pkg._repo] = (counts[pkg._repo] || 0) + 1;
+            counts[pkg._repo] = ((counts[pkg._repo] || 0) + 1);
         });
 
         return counts;
