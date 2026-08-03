@@ -24,12 +24,14 @@ export class PackageModal {
     private body: HTMLElement;
     private clipboard: ClipboardService;
     private scrollPosition: number = 0;
+    private packages: Map<string, Package> = new Map();
 
-    constructor() {
+    constructor(packages: Package[]) {
         this.modal = document.getElementById('modal')!;
         this.title = document.getElementById('modal-title')!;
         this.body = document.getElementById('modal-body')!;
         this.clipboard = new ClipboardService();
+        this.packages = new Map(packages.map((pkg: Package): [string, Package] => [pkg.name, pkg]));
 
         this.initListeners();
     }
@@ -139,7 +141,7 @@ export class PackageModal {
                 <div class="detail-label">Dependencies (${pkg.depends.length})</div>
 
                 <div class="detail-value depends-list">
-                    ${pkg.depends.length ? pkg.depends.map((d: string): string => `<span class="tag dependency" data-dep="${escapeHtml(d)}">${escapeHtml(d)}</span>`).join('') : '<span style="color: var(--text-secondary);">None</span>'}
+                    ${pkg.depends.length ? pkg.depends.map((d: string): string => this.renderDependency(d)).join('') : '<span style="color: var(--text-secondary);">None</span>'}
                 </div>
             </div>
 
@@ -147,7 +149,7 @@ export class PackageModal {
                 <div class="detail-label">Required By (${pkg.required_by.length})</div>
 
                 <div class="detail-value depends-list">
-                    ${pkg.required_by.length ? pkg.required_by.map((d: string): string => `<span class="tag dependency" data-dep="${escapeHtml(d)}">${escapeHtml(d)}</span>`).join('') : '<span style="color: var(--text-secondary);">None</span>'}
+                    ${pkg.required_by.length ? pkg.required_by.map((d: string): string => this.renderDependency(d)).join('') : '<span style="color: var(--text-secondary);">None</span>'}
                 </div>
             </div>
         `;
@@ -174,6 +176,11 @@ export class PackageModal {
                 this.clipboard.copy(url).then((): void => console.log('Source URL copied!'));
             });
         });
+    }
+
+    private renderDependency(dep: string): string {
+        const exists: boolean = this.packages.has(dep);
+        return `<span class="tag dependency ${exists ? '' : 'dependency-missing'}" ${exists ? `data-dep="${escapeHtml(dep)}"` : ''}>${escapeHtml(dep)}</span>`;
     }
 
     private renderSource(src: PackageSource, index: number): string {

@@ -648,6 +648,12 @@ select {
     border-color: var(--vylen);
 }
 
+.dependency-missing {
+    opacity: .45;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
 .empty-state {
     text-align: center;
     padding: 3rem 1rem;

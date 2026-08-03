@@ -100,10 +100,8 @@ class App {
         });
 
         this.packageCard = new PackageCard((pkg: Package): void => {
-            this.modal.show(pkg);
+            this.modal?.show(pkg);
         });
-
-        this.modal = new PackageModal();
 
         this.searchBar = new SearchBar((query: string): void => {
             this.state.searchQuery = query;
@@ -119,7 +117,7 @@ class App {
 
     private initKeyboardShortcuts(): void {
         document.addEventListener('keydown', (e: KeyboardEvent): void => {
-            if (e.key === 'Escape') this.modal.close();
+            if (e.key === 'Escape') this.modal?.close();
 
             if (e.key === '/') {
                 const target: HTMLElement = e.target as HTMLElement;
@@ -140,6 +138,7 @@ class App {
                 this.elements.loadedRepos.textContent = loaded.toString();
             });
 
+            this.modal = new PackageModal(this.state.allPackages);
             this.elements.loading.classList.add('hidden');
 
             if (this.state.allPackages.length === 0) {
@@ -207,7 +206,7 @@ class App {
         this.state.isLoading = true;
 
         const start: number = this.state.displayedCount;
-        const end:   number = Math.min(start + ITEMS_PER_PAGE, this.state.filteredPackages.length);
+        const end:   number = Math.min((start + ITEMS_PER_PAGE), this.state.filteredPackages.length);
 
         const fragment: DocumentFragment = document.createDocumentFragment();
         for (let i: number = start; i < end; i++) fragment.appendChild(this.packageCard.create(this.state.filteredPackages[i]));
