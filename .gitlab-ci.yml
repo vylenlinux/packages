@@ -21,8 +21,7 @@ pages:
 
     script:
         - mkdir -p public
-        - cp index.html style.css public/
-        - cp -r dist/ public/
+        - cp -r dist/* public/
 
     artifacts:
         paths:
