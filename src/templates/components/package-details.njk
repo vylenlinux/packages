@@ -1,0 +1,159 @@
+<section class="package-overview">
+    <div class="overview-grid">
+        <div class="overview-item">
+            <span>Version</span>
+            <code>{{ package.version }}{% if package.release %}-{{ package.release }}{% endif %}</code>
+        </div>
+
+        <div class="overview-item">
+            <span>Repository</span>
+                <strong>{{ package._repo }}</strong>
+        </div>
+
+        <div class="overview-item overview-item--wide">
+            <span>Description</span>
+            <p>{% if package.description %}{{ package.description }}{% else %}No description{% endif %}</p>
+        </div>
+
+        {% if package.maintainer %}
+            <div class="overview-item">
+                <span>Maintainer</span>
+                <strong>{{ package.maintainer }}</strong>
+            </div>
+        {% endif %}
+
+        <div class="overview-item">
+            <span>Last modified</span>
+            <strong>{{ package.last_update }}</strong>
+        </div>
+
+        {% if package.homepage %}
+            <div class="overview-item overview-item--wide">
+                <span>Homepage</span>
+
+                <a href="{{ package.homepage }}" target="_blank" rel="noopener">
+                    {{ package.homepage }} <span aria-hidden="true">↗</span>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="install-panel">
+    <div>
+        <span class="detail-section__label">Install command</span>
+        <code>emerald install {{ package.name }}</code>
+    </div>
+
+    <button class="copy-btn" type="button" data-copy-command="emerald install {{ package.name }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+
+        Copy
+    </button>
+</section>
+
+<section class="detail-section detail-section--source">
+    <div class="detail-section__header">
+        <div>
+            <span class="detail-section__label">Project</span>
+            <h3>Source code</h3>
+        </div>
+
+        <a class="source-project-link" href="{{ gitlabBase }}/{{ package._repo }}/-/tree/main/{{ package.name }}" target="_blank" rel="noopener">
+            View on GitLab <span aria-hidden="true">↗</span>
+        </a>
+    </div>
+</section>
+
+<section class="detail-section">
+    <div class="detail-section__header">
+        <div>
+            <span class="detail-section__label">Downloads</span>
+
+            <h3>
+                Sources <em>{{ sourceItems.length }}</em>
+            </h3>
+        </div>
+    </div>
+
+    {% if sourceItems.length %}
+        <div class="source-list">
+            {% for source in sourceItems %}
+                <article class="source-item">
+                    <div class="source-item__top">
+                        <span class="source-kind source-kind--{{ source.type }}">{{ source.label }}</span>
+                        <span>Source {{ loop.index }}</span>
+                    </div>
+
+                    <a class="source-url" href="{{ source.url }}" target="_blank" rel="noopener" title="{{ source.url }}">{{ source.shortUrl }}</a>
+
+                    {% if source.rename %}
+                        <p class="source-rename">
+                            Rename to <code>{{ source.rename }}</code>
+                        </p>
+                    {% endif %}
+
+                    <button class="source-copy-btn" type="button" data-copy-command="{{ source.url }}" aria-label="Copy source URL">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    </button>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted-copy">No sources listed for this package.</p>
+    {% endif %}
+</section>
+
+<section class="detail-section dependency-section">
+    <div class="detail-section__header">
+        <div>
+            <span class="detail-section__label">Package graph</span>
+
+            <h3>
+                Dependencies <em>{{ dependencyItems.length }}</em>
+            </h3>
+        </div>
+    </div>
+
+    <div class="tag-list">
+        {% for dependency in dependencyItems %}
+            {% if dependency.exists %}
+                <button class="tag dependency" type="button" data-dependency="{{ dependency.name }}">{{ dependency.name }}</button>
+            {% else %}
+                <span class="tag dependency dependency-missing" title="Not available in loaded repositories">{{ dependency.name }}</span>
+            {% endif %}
+        {% else %}
+            <p class="muted-copy">No dependencies declared.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="detail-section dependency-section">
+    <div class="detail-section__header">
+        <div>
+            <span class="detail-section__label">Package graph</span>
+
+            <h3>
+                Required by <em>{{ requiredByItems.length }}</em>
+            </h3>
+        </div>
+    </div>
+
+    <div class="tag-list">
+        {% for dependency in requiredByItems %}
+            {% if dependency.exists %}
+                <button class="tag dependency" type="button" data-dependency="{{ dependency.name }}">{{ dependency.name }}</button>
+            {% else %}
+                <span class="tag dependency dependency-missing" title="Not available in loaded repositories">{{ dependency.name }}</span>
+            {% endif %}
+        {% else %}
+            <p class="muted-copy">No known reverse dependencies.</p>
+        {% endfor %}
+    </div>
+</section>

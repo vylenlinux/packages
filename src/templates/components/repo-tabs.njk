@@ -1,0 +1,15 @@
+<button class="repo-tab{% if activeRepo === 'all' %} active{% endif %}" data-repo="all" type="button" aria-pressed="{% if activeRepo === 'all' %}true{% else %}false{% endif %}">
+    <span class="repo-tab__dot"></span>
+    <span>All packages</span>
+
+    <strong>{{ totalCount }}</strong>
+</button>
+
+{% for tab in tabs %}
+    <button class="repo-tab{% if activeRepo === tab.id %} active{% endif %}" data-repo="{{ tab.id }}" type="button" aria-pressed="{% if activeRepo === tab.id %}true{% else %}false{% endif %}" title="{{ tab.name }}">
+        <span class="repo-tab__dot"></span>
+        <span>{{ tab.name }}</span>
+
+        <strong>{{ tab.count }}</strong>
+    </button>
+{% endfor %}

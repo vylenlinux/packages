@@ -1,16 +1,25 @@
 {
     "name": "vylen-packages",
-    "version": "1.0.0",
+    "version": "1.0.1",
+    "private": true,
     "type": "module",
+    "description": "Vylen Linux package browser.",
 
     "scripts": {
-        "build": "tsc",
-        "watch": "tsc -w",
+        "build": "node scripts/build.mjs",
+        "build:templates": "node scripts/build.mjs --templates-only",
+        "typecheck": "tsc --noEmit",
         "clean": "rm -rf dist",
-        "serve": "python3 -m http.server 8000"
+        "serve": "python3 -m http.server 8000 -d dist"
+    },
+
+    "dependencies": {
+        "nunjucks": "^3.2.4"
     },
 
     "devDependencies": {
-        "typescript": "^6.0.2"
+        "typescript": "^6.0.2",
+        "@types/nunjucks": "^3.2.6",
+        "esbuild": "^0.25.0"
     }
 }

@@ -2,16 +2,16 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 export class Toast {
-    private element: HTMLElement;
+    private timer: number | undefined;
 
-    constructor() {
-        this.element = document.getElementById('toast')!;
-    }
+    constructor(private readonly element: HTMLElement) {}
 
     show(message: string): void {
+        window.clearTimeout(this.timer);
+
         this.element.textContent = message;
         this.element.classList.add('show');
 
-        setTimeout((): void => this.element.classList.remove('show'), 2000);
+        this.timer = window.setTimeout((): void => this.element.classList.remove('show'), 2200);
     }
 }

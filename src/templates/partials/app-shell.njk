@@ -1,0 +1,220 @@
+<div class="app-shell">
+    <header class="topbar">
+        <a class="brand" href="#catalog" aria-label="Vylen Package Atlas">
+            <span class="brand-mark" aria-hidden="true">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+
+            <span>
+                <strong>Vylen</strong>
+                <small>Package Atlas</small>
+            </span>
+        </a>
+
+        <div class="topbar-actions">
+            <span class="sync-status">
+                <span></span> Live repositories
+            </span>
+
+            <button class="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42"></path>
+                    <circle cx="12" cy="12" r="4"></circle>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="catalog-overview" aria-labelledby="page-title">
+            <div class="overview-copy">
+                <p class="eyebrow">
+                    <span></span> Vylen Linux
+                </p>
+
+                <h1 id="page-title">
+                    Package<br />
+                    <em>catalog</em>
+                </h1>
+
+                <p>Browse the packages maintained across the Vylen Linux repositories. Search, compare and copy the installation command in one place.</p>
+
+                <a class="overview-link" href="#catalog">
+                    Open catalog <span aria-hidden="true">↓</span>
+                </a>
+            </div>
+
+            <aside class="overview-index" aria-label="Catalog statistics">
+                <div class="overview-index__header">
+                    <span>
+                        <i></i>
+                        Repository index
+                    </span>
+
+                    <strong>Live</strong>
+                </div>
+
+                <div class="overview-index__main">
+                    <strong id="total-packages">—</strong>
+                    <span>Packages available</span>
+                </div>
+
+                <div class="overview-stats">
+                    <div>
+                        <span id="total-repos">—</span>
+                        <small>Repositories</small>
+                    </div>
+
+                    <div>
+                        <span id="loaded-repos">0</span>
+                        <small>Sources synced</small>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="catalog-section" id="catalog" aria-labelledby="catalog-title">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">
+                        <span></span> Package catalog
+                    </p>
+
+                    <h2 id="catalog-title">Explore the ecosystem</h2>
+                </div>
+
+                <p>Search by package, description or maintainer.</p>
+            </div>
+
+            <div class="catalog-toolbar">
+                <div class="search-control">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="6"></circle>
+                        <path d="m16 16 4 4"></path>
+                    </svg>
+
+                    <label class="visually-hidden" for="search">Search packages</label>
+                    <input type="search" id="search" placeholder="Search selected field" autocomplete="off" spellcheck="false" disabled />
+
+                    <button class="search-clear" type="button" data-clear-search aria-label="Clear search" hidden>
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m7 7 10 10M17 7 7 17"></path>
+                        </svg>
+                    </button>
+
+                    <kbd aria-hidden="true">/</kbd>
+                </div>
+
+                <label class="field-control" for="search-field">
+                    <span>Search in</span>
+
+                    <select id="search-field" disabled>
+                        <option value="all">All fields</option>
+                        <option value="name">Package name</option>
+                        <option value="version">Version</option>
+                        <option value="maintainer">Maintainer</option>
+                        <option value="description">Description</option>
+                    </select>
+                </label>
+
+                <label class="sort-control" for="sort-by">
+                    <span>Sort by</span>
+
+                    <select id="sort-by" disabled>
+                        <option value="name">Name A–Z</option>
+                        <option value="version">Version</option>
+                        <option value="maintainer">Maintainer</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="catalog-meta">
+                <p class="search-status" id="search-status" aria-live="polite">Loading catalog…</p>
+
+                <p class="search-hint">
+                    <kbd>/</kbd> to focus · <kbd>Esc</kbd> to clear
+                </p>
+            </div>
+
+            <div class="repo-tabs" id="repo-tabs" aria-label="Repository filters"></div>
+
+            <div id="loading" class="loading-state">
+                <span class="loading-orbit" aria-hidden="true"></span>
+
+                <div>
+                    <strong>Indexing repositories</strong>
+                    <p>Fetching the latest package metadata.</p>
+                </div>
+            </div>
+
+            <div id="error" class="error-state hidden" role="alert"></div>
+
+            <div class="package-list hidden" id="package-list">
+                <div id="packages-container" class="packages-grid"></div>
+
+                <div class="scroll-sentinel hidden" id="sentinel">
+                    <button class="load-more-btn" type="button">
+                        Load more packages <span aria-hidden="true">↓</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="empty-state" class="empty-state hidden">
+                <span class="empty-icon" aria-hidden="true">⌕</span>
+                <h3>No packages found</h3>
+                <p>Try another query or choose a different repository.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <span class="brand-mark brand-mark--small" aria-hidden="true">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+
+            <span>
+                Built for the <strong>Vylen Linux</strong> ecosystem.
+            </span>
+        </div>
+
+        <div class="footer-links">
+            <a href="https://vylen.gitlab.io/" target="_blank" rel="noopener">
+                Website <span aria-hidden="true">↗</span>
+            </a>
+
+            <a href="https://gitlab.com/vylen" target="_blank" rel="noopener">
+                GitLab <span aria-hidden="true">↗</span>
+            </a>
+        </div>
+
+        <small>© {{ site.year }} Vylen Linux</small>
+    </footer>
+</div>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div>
+                <p class="modal-kicker">Package details</p>
+                <h2 id="modal-title">Package</h2>
+            </div>
+
+            <button class="close-btn" type="button" aria-label="Close package details">×</button>
+        </div>
+
+        <div class="modal-body" id="modal-body"></div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">Copied!</div>
+
+<button class="back-to-top" id="back-to-top" type="button" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m18 15-6-6-6 6"></path>
+    </svg>
+</button>

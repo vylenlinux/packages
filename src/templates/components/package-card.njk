@@ -1,0 +1,56 @@
+<article class="package-card" data-package-name="{{ package.name }}" role="button" tabindex="0" aria-label="Open details for {{ package.name }}">
+    <div class="package-card__topline">
+        <span class="repository-label">
+            <i aria-hidden="true"></i>
+            <span>{{ package._repo }}</span>
+        </span>
+
+        <code class="package-version" title="{{ package.version }}-{{ package.release }}">{{ package.version }}-{{ package.release }}</code>
+    </div>
+
+    <div class="package-card__heading">
+        <span class="package-glyph" aria-hidden="true">◫</span>
+        <h3 title="{{ package.name }}">{{ package.name }}</h3>
+    </div>
+
+    <p class="package-description" title="{% if package.description %}{{ package.description }}{% else %}No description{% endif %}">{% if package.description %}{{ package.description }}{% else %}No description{% endif %}</p>
+
+    <div class="package-meta">
+        <span class="package-maintainer" title="{% if package.maintainer %}{{ package.maintainer }}{% else %}Unmaintained{% endif %}">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3"></circle>
+                <path d="M5 20a7 7 0 0 1 14 0"></path>
+            </svg>
+
+            <span>{% if package.maintainer %}{{ package.maintainer }}{% else %}Unmaintained{% endif %}</span>
+        </span>
+
+        <span class="package-dependencies" title="{{ package.depends.length }} dependencies">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 8h8v8H8z"></path>
+                <path d="M4 4h4M16 4h4M4 20h4M16 20h4"></path>
+            </svg>
+
+            {{ package.depends.length }} deps
+        </span>
+    </div>
+
+    <div class="package-actions">
+        <button class="install-cmd" type="button" data-copy-command="emerald install {{ package.name }}" title="Copy install command">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+
+            <span>emerald install {{ package.name }}</span>
+        </button>
+
+        <a href="{{ gitlabBase }}/{{ package._repo }}/-/tree/main/{{ package.name }}" target="_blank" rel="noopener" class="gitlab-link" data-stop-card>
+            <span>Source</span>
+
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M7 17 17 7M9 7h8v8"></path>
+            </svg>
+        </a>
+    </div>
+</article>

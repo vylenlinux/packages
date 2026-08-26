@@ -2,238 +2,124 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import {
-    initialState,
-
-    type AppState,
-    type SortBy
-} from './models/state.js';
-
-import {
-    ApiService
-} from './services/api.js';
-
-import {
-    SearchService
-} from './services/search.js';
-
-import {
-    RepoTabs
-} from './components/repo-tabs.js';
-
-import {
-    PackageCard
-} from './components/package-card.js';
-
-import {
-    PackageModal
-} from './components/package-modal.js';
-
-import {
-    SearchBar
-} from './components/search-bar.js';
-
-import {
-    ITEMS_PER_PAGE
+    REPOSITORIES
 } from './config.js';
 
 import {
-    initTheme
-} from './utils/theme.js';
-
-import type {
-    Package
-} from "./models/package.js";
+    loadCatalog
+} from './data/catalog-loader.js';
 
 import {
-    REPO_CONFIG
-} from './models/repository.js';
+    CatalogController
+} from './features/catalog/catalog-controller.js';
 
-class App {
-    private readonly state: AppState;
-    private api: ApiService;
-    private searchService: SearchService;
-    private repoTabs!: RepoTabs;
-    private packageCard!: PackageCard;
-    private modal!: PackageModal;
-    private searchBar!: SearchBar;
+import {
+    CatalogView
+} from './features/catalog/catalog-view.js';
 
-    private elements!: {
-        loading:       HTMLElement;
-        error:         HTMLElement;
-        packageList:   HTMLElement;
-        container:     HTMLElement;
-        sentinel:      HTMLElement;
-        emptyState:    HTMLElement;
-        totalPackages: HTMLElement;
-        totalRepos:    HTMLElement;
-        loadedRepos:   HTMLElement;
-    };
+import {
+    ModalController
+} from './features/modal/modal-controller.js';
 
-    constructor() {
-        this.state = { ...initialState };
-        this.api = new ApiService();
-        this.searchService = new SearchService();
+import {
+    ThemeController
+} from './features/theme/theme-controller.js';
 
-        this.initElements();
-        this.initComponents();
-        this.initKeyboardShortcuts();
-    }
+import {
+    element
+} from './shared/dom.js';
 
-    private initElements(): void {
-        this.elements = {
-            loading:       document.getElementById('loading')!,
-            error:         document.getElementById('error')!,
-            packageList:   document.getElementById('package-list')!,
-            container:     document.getElementById('packages-container')!,
-            sentinel:      document.getElementById('sentinel')!,
-            emptyState:    document.getElementById('empty-state')!,
-            totalPackages: document.getElementById('total-packages')!,
-            totalRepos:    document.getElementById('total-repos')!,
-            loadedRepos:   document.getElementById('loaded-repos')!
-        };
-    }
+import {
+    Toast
+} from './shared/toast.js';
 
-    private initComponents(): void {
-        this.repoTabs = new RepoTabs('repo-tabs', (repo: string): void => {
-            this.state.activeRepo = repo;
-            this.filterAndRender();
-        });
+import type {
+    CatalogLoadProgress,
+    CatalogLoadResult
+} from './types.js';
 
-        this.packageCard = new PackageCard((pkg: Package): void => {
-            this.modal?.show(pkg);
-        });
+class PackageAtlasApp {
+    private readonly catalogView: CatalogView = new CatalogView();
+    private readonly toast: Toast = new Toast(element<HTMLElement>('#toast'));
+    private readonly backToTop: HTMLButtonElement = element<HTMLButtonElement>('#back-to-top');
+    private modal: ModalController | undefined;
+    private catalog: CatalogController | undefined;
 
-        this.searchBar = new SearchBar((query: string): void => {
-            this.state.searchQuery = query;
-            this.filterAndRender();
-        }, (sort: SortBy): void => {
-            this.searchService.sort(this.state, sort);
-            this.state.displayedCount = 0;
-            this.elements.container.innerHTML = '';
-
-            this.loadMore();
-        });
-    }
-
-    private initKeyboardShortcuts(): void {
-        document.addEventListener('keydown', (e: KeyboardEvent): void => {
-            if (e.key === 'Escape') this.modal?.close();
-
-            if (e.key === '/') {
-                const target: HTMLElement = e.target as HTMLElement;
-
-                if (target.tagName !== 'INPUT') {
-                    e.preventDefault();
-                    this.searchBar.focus();
-                }
-            }
-        });
-    }
-
-    async init(): Promise<void> {
-        this.elements.totalRepos.textContent = Object.keys(REPO_CONFIG).length.toString();
+    async initialize(): Promise<void> {
+        new ThemeController().initialize();
+        this.bindGlobalEvents();
 
         try {
-            this.state.allPackages = await this.api.loadRepositories((loaded: number): void => {
-                this.elements.loadedRepos.textContent = loaded.toString();
-            });
-
-            this.modal = new PackageModal(this.state.allPackages);
-            this.elements.loading.classList.add('hidden');
-
-            if (this.state.allPackages.length === 0) {
-                this.showError('Failed to load any packages');
-                return;
-            }
-
-            this.elements.totalPackages.textContent = this.state.allPackages.length.toLocaleString();
-            this.elements.packageList.classList.remove('hidden');
-            this.searchBar.enable();
-
-            this.repoTabs.render(this.state.allPackages);
-            initTheme();
-
-            this.filterAndRender();
-            this.initInfiniteScroll();
-            this.handleInitialUrl();
-        } catch (err) {
-            this.showError('Failed to initialize application');
-            console.error(err);
+            await this.reloadCatalog();
+        } catch (error) {
+            console.error(error);
+            this.catalogView.showError('Failed to load repository configuration');
         }
     }
 
-    private handleInitialUrl(): void {
-        const hash: string = window.location.hash.slice(1);
-
-        if (hash) {
-            const pkg: Package | undefined = this.state.allPackages.find((p: Package): boolean => (p.name === hash));
-            if (pkg) this.modal.show(pkg);
-        }
-
-        window.addEventListener('hashchange', (): void => {
-            const name: string = window.location.hash.slice(1);
-
-            if (!name) {
-                this.modal.close();
-                return;
-            }
-
-            const pkg: Package | undefined = this.state.allPackages.find((p: Package): boolean => (p.name === name));
-            if (pkg) this.modal.show(pkg);
+    private async reloadCatalog(): Promise<void> {
+        this.catalogView.setRepositoryProgress({
+            completed: 0,
+            successful: 0,
+            total: REPOSITORIES.length
         });
+
+        try {
+            const loadResult: CatalogLoadResult = await loadCatalog([...REPOSITORIES], (progress: CatalogLoadProgress): void => this.catalogView.setRepositoryProgress(progress));
+
+            this.modal = new ModalController(loadResult.packages, this.toast);
+            this.modal.bindEvents();
+
+            this.catalog = new CatalogController(this.catalogView, this.toast, (name: string): void => this.modal?.open(name));
+            this.catalog.initialize(loadResult.packages, loadResult.loadedRepositoryIds, [...REPOSITORIES]);
+
+            this.updateBackToTopVisibility();
+            this.modal.openFromHash();
+        } catch (error) {
+            console.error(error);
+            this.catalogView.showError('Failed to load repositories');
+        }
     }
 
-    private filterAndRender(): void {
-        this.searchService.filter(this.state);
-        this.state.displayedCount = 0;
-        this.elements.container.innerHTML = '';
+    private bindGlobalEvents(): void {
+        document.addEventListener('keydown', (event: KeyboardEvent): void => this.handleGlobalKeydown(event));
 
-        if (this.state.filteredPackages.length === 0) {
-            this.elements.emptyState.classList.remove('hidden');
-            this.elements.sentinel.classList.add('hidden');
+        window.addEventListener('scroll', (): void => this.updateBackToTopVisibility(), {
+            passive: true
+        });
 
+        window.addEventListener('hashchange', (): void => this.modal?.openFromHash());
+
+        this.backToTop.addEventListener('click', (): void => window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        }));
+    }
+
+    private handleGlobalKeydown(event: KeyboardEvent): void {
+        if (event.key === 'Escape') {
+            if (!this.modal?.isOpen()) {
+                this.catalog?.clearSearch(true);
+                return;
+            }
+
+            this.modal.close(true);
             return;
         }
 
-        this.elements.emptyState.classList.add('hidden');
-        this.elements.sentinel.classList.remove('hidden');
+        const activeTagName: string | undefined = document.activeElement?.tagName;
 
-        this.loadMore();
+        if ((event.key === '/') && (activeTagName !== 'INPUT') && (activeTagName !== 'SELECT') && (activeTagName !== 'TEXTAREA')) {
+            event.preventDefault();
+            this.catalog?.focusSearch();
+        }
     }
 
-    private loadMore(): void {
-        if (this.state.isLoading) return;
-        this.state.isLoading = true;
-
-        const start: number = this.state.displayedCount;
-        const end:   number = Math.min((start + ITEMS_PER_PAGE), this.state.filteredPackages.length);
-
-        const fragment: DocumentFragment = document.createDocumentFragment();
-        for (let i: number = start; i < end; i++) fragment.appendChild(this.packageCard.create(this.state.filteredPackages[i]));
-
-        this.elements.container.appendChild(fragment);
-        this.state.displayedCount = end;
-
-        if (this.state.displayedCount >= this.state.filteredPackages.length) this.elements.sentinel.classList.add('hidden');
-        this.state.isLoading = false;
-    }
-
-    private initInfiniteScroll(): void {
-        const observer = new IntersectionObserver((entries: IntersectionObserverEntry[]): void => {
-            if (entries[0].isIntersecting && !this.state.isLoading) this.loadMore();
-        }, {
-            rootMargin: '100px'
-        });
-
-        observer.observe(this.elements.sentinel);
-    }
-
-    private showError(msg: string): void {
-        this.elements.error.textContent = msg;
-        this.elements.error.classList.remove('hidden');
+    private updateBackToTopVisibility(): void {
+        this.backToTop.classList.toggle('is-visible', (window.scrollY > 560));
     }
 }
 
 document.addEventListener('DOMContentLoaded', (): void => {
-    new App().init().then((): void => console.log('App initialized'));
+    void new PackageAtlasApp().initialize();
 });
