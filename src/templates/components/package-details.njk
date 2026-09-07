@@ -84,16 +84,14 @@
             {% for source in sourceItems %}
                 <article class="source-item">
                     <div class="source-item__top">
-                        <span class="source-kind source-kind--{{ source.type }}">{{ source.label }}</span>
+                        <span class="source-kind">{{ source.label }}</span>
                         <span>Source {{ loop.index }}</span>
                     </div>
 
-                    <a class="source-url" href="{{ source.url }}" target="_blank" rel="noopener" title="{{ source.url }}">{{ source.shortUrl }}</a>
-
-                    {% if source.rename %}
-                        <p class="source-rename">
-                            Rename to <code>{{ source.rename }}</code>
-                        </p>
+                    {% if source.type == "own" %}
+                        <a class="source-url" href="{{ source.url }}" target="_blank" rel="noopener" title="{{ source.url }}">{{ source.shortUrl }}</a>
+                    {% else %}
+                        <a class="source-url" href="{{ source.url }}" title="{{ source.url }}" onclick="event.preventDefault();">{{ source.shortUrl }}</a>
                     {% endif %}
 
                     <button class="source-copy-btn" type="button" data-copy-command="{{ source.url }}" aria-label="Copy source URL">

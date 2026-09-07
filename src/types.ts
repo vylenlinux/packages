@@ -4,12 +4,11 @@
 export type RepositoryId = string;
 export type SortBy = 'name' | 'version' | 'maintainer';
 export type SearchField = 'all' | 'name' | 'version' | 'maintainer' | 'description';
-export type SourceType = 'url' | 'git' | 'file' | 'rename';
+export type SourceType = 'ext' | 'own';
 
 export interface PackageSource {
     type: SourceType;
     url: string;
-    rename?: string;
 }
 
 export interface PackageData {

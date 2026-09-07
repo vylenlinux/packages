@@ -1171,26 +1171,8 @@ button:disabled, input:disabled, select:disabled {
     font-weight: 800;
     letter-spacing: .07em;
     text-transform: uppercase;
-}
-
-.source-kind--url {
-    color: #95c2ff;
-    background: rgba(133, 183, 255, .15);
-}
-
-.source-kind--git {
-    color: #ffd394;
-    background: rgba(245, 158, 11, .15);
-}
-
-.source-kind--file {
     color: #93efb8;
     background: rgba(64, 196, 117, .14);
-}
-
-.source-kind--rename {
-    color: #d8b6ff;
-    background: rgba(169, 155, 255, .14);
 }
 
 .source-url {
@@ -1201,17 +1183,6 @@ button:disabled, input:disabled, select:disabled {
     font-size: .74rem;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.source-rename {
-    margin: .4rem 0 0;
-    color: var(--muted);
-    font-size: .7rem;
-}
-
-.source-rename code {
-    color: var(--text);
-    font-family: var(--mono), monospace;
 }
 
 .source-copy-btn {
