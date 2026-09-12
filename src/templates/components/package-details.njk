@@ -18,7 +18,14 @@
         {% if package.maintainer %}
             <div class="overview-item">
                 <span>Maintainer</span>
-                <strong>{{ package.maintainer }}</strong>
+
+                <strong>
+                    {% if package.maintainerEmail %}
+                        <a href="mailto:{{ package.maintainerEmail }}">{{ package.maintainer }}</a>
+                    {% else %}
+                        {{ package.maintainer }}
+                    {% endif %}
+                </strong>
             </div>
         {% endif %}
 

@@ -27,6 +27,7 @@ export interface PackageData {
 export interface Package extends Required<Omit<PackageData, 'description' | 'maintainer' | 'homepage'>> {
     description: string | null;
     maintainer: string | null;
+    maintainerEmail: string | null;
     homepage: string | null;
     _repo: RepositoryId;
     _searchIndex: Record<SearchField, string>;

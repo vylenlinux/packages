@@ -10,6 +10,7 @@ import type {
 } from '../types.js';
 
 import {
+    extract_maintainer,
     normalizeSearchText,
     normalizeVersion
 } from '../features/catalog/normalization.js';
@@ -19,7 +20,9 @@ function normalizePackage(data: PackageData, repository: RepositoryDefinition): 
     const version: string = String(data.version || 'unknown');
     const release: string = (data.release ? String(data.release) : '');
     const description: string | null = (data.description ? String(data.description) : null);
-    const maintainer: string | null = (data.maintainer ? String(data.maintainer) : null);
+    const rawMaintainer: string | null = (data.maintainer ? String(data.maintainer).trim() : null);
+    const maintainerEmail: string | null = extract_maintainer(rawMaintainer);
+    const maintainer: string | null = (rawMaintainer && (maintainerEmail ? (rawMaintainer.replace(maintainerEmail, '').replace(/[<>]/g, '').trim() || maintainerEmail) : rawMaintainer));
 
     const searchIndex: Record<SearchField, string> = {
         all: normalizeSearchText(`${name} ${version} ${release} ${description || ''} ${maintainer || ''}`),
@@ -35,6 +38,8 @@ function normalizePackage(data: PackageData, repository: RepositoryDefinition): 
         release,
         description,
         maintainer,
+        maintainerEmail,
+
         homepage: (data.homepage ? String(data.homepage) : null),
         depends: (Array.isArray(data.depends) ? data.depends.map(String) : []),
         required_by: (Array.isArray(data.required_by) ? data.required_by.map(String) : []),
