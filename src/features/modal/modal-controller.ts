@@ -34,6 +34,7 @@ import type {
 export class ModalController {
     private readonly modal: HTMLElement = element<HTMLElement>('#modal');
     private readonly modalContent: HTMLElement = element<HTMLElement>('.modal-content');
+    private readonly modalKicker: HTMLElement = element<HTMLElement>('.modal-kicker');
     private readonly modalTitle: HTMLElement = element<HTMLElement>('#modal-title');
     private readonly modalBody: HTMLElement = element<HTMLElement>('#modal-body');
     private readonly closeButton: HTMLButtonElement = element<HTMLButtonElement>('.close-btn');
@@ -61,7 +62,24 @@ export class ModalController {
 
     open(name: string): void {
         const pkg: Package | undefined = this.packages.find((candidate: Package): boolean => (candidate.name === name));
-        if (!pkg) return;
+
+        if (!pkg) {
+            if (!this.isOpen()) this.pageScrollPosition = window.scrollY;
+
+            this.modalKicker.textContent = 'Package lookup';
+            this.modalTitle.textContent = 'Package not found';
+
+            const message: HTMLElement = document.createElement('p');
+            message.className = 'muted-copy';
+            message.textContent = `No package named “${name}” was found. Check the package name or return to the catalog and try again.`;
+
+            this.modalBody.replaceChildren(message);
+            this.modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            this.resetContentScroll();
+
+            return;
+        }
 
         if (!this.isOpen()) this.pageScrollPosition = window.scrollY;
         const packageNames = new Set(this.packages.map((item: Package): string => item.name));
@@ -69,6 +87,7 @@ export class ModalController {
         const requiredByItems: DependencyItem[] = this.toDependencyItems(pkg.required_by, packageNames);
         const sourceItems: SourceTemplateItem[] = this.toSourceItems(pkg);
 
+        this.modalKicker.textContent = 'Package details';
         this.modalTitle.textContent = pkg.name;
 
         this.modalBody.innerHTML = templateEnvironment.renderString(templates.packageDetails, {

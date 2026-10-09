@@ -109,4 +109,19 @@ export class CatalogView {
     updateSearchStatus(status: string): void {
         this.searchStatus.textContent = status;
     }
+
+    showNoResults(query: string): void {
+        const heading: HTMLElement | null = this.emptyState.querySelector('h3');
+        const message: HTMLElement | null = this.emptyState.querySelector('p');
+
+        if (query) {
+            if (heading) heading.textContent = 'Package not found';
+            if (message) message.textContent = `No package matching “${query}” was found. Check the spelling or try a different search.`;
+
+            return;
+        }
+
+        if (heading) heading.textContent = 'No packages found';
+        if (message) message.textContent = 'Try another query or choose a different repository.';
+    }
 }

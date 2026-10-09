@@ -133,6 +133,7 @@ export class CatalogController {
         this.updateSearchStatus();
 
         if (!this.state.filteredPackages.length) {
+            this.view.showNoResults(this.state.searchQuery);
             this.view.emptyState.classList.remove('hidden');
             this.view.sentinel.classList.add('hidden');
 
@@ -167,6 +168,11 @@ export class CatalogController {
         const count:      string = this.state.filteredPackages.length.toLocaleString();
         const selectedRepository: RepositoryDefinition | undefined = this.repositories.find((repository: RepositoryDefinition): boolean => repository.id === this.state.activeRepo);
         const repository: string = ((this.state.activeRepo === 'all') ? 'all repositories' : `${selectedRepository?.id || 'selected repository'}`);
+
+        if (this.state.searchQuery && (this.state.filteredPackages.length === 0)) {
+            this.view.updateSearchStatus(`Package not found: “${this.state.searchQuery}” in ${this.getSearchFieldLabel().toLocaleLowerCase()} · ${repository}`);
+            return;
+        }
 
         if (this.state.searchQuery) {
             this.view.updateSearchStatus(`${count} result${((this.state.filteredPackages.length === 1) ? '' : 's')} for “${this.view.search.value.trim()}” in ${this.getSearchFieldLabel().toLocaleLowerCase()} · ${repository}`);
