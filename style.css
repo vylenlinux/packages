@@ -1707,11 +1707,6 @@ button:disabled, input:disabled, select:disabled {
     box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
 }
 
-.overview-index__header strong {
-    color: var(--accent);
-    font-size: .62rem;
-}
-
 .overview-index__main {
     display: grid;
     gap: .12rem;
