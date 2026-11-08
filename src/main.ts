@@ -74,7 +74,7 @@ class PackageAtlasApp {
             this.catalog.initialize(loadResult.packages, loadResult.loadedRepositoryIds, [...REPOSITORIES]);
 
             this.updateBackToTopVisibility();
-            this.modal.openFromHash();
+            this.modal.openFromUrl();
         } catch (error) {
             console.error(error);
             this.catalogView.showError('Failed to load repositories');
@@ -88,7 +88,8 @@ class PackageAtlasApp {
             passive: true
         });
 
-        window.addEventListener('hashchange', (): void => this.modal?.openFromHash());
+        window.addEventListener('hashchange', (): void => this.modal?.openFromUrl());
+        window.addEventListener('popstate', (): void => this.modal?.openFromUrl());
 
         this.backToTop.addEventListener('click', (): void => window.scrollTo({
             top: 0,

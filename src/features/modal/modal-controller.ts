@@ -42,6 +42,7 @@ export class ModalController {
     private pageScrollPosition: number = 0;
 
     private packages: Package[];
+    private permalinkMode: 'hash' | 'query' = 'hash';
 
     constructor(packages: Package[], private readonly toast: Toast) {
         this.packages = packages;
@@ -60,7 +61,7 @@ export class ModalController {
         return this.modal.classList.contains('active');
     }
 
-    open(name: string): void {
+    open(name: string, updateLocation: boolean = true): void {
         const pkg: Package | undefined = this.packages.find((candidate: Package): boolean => (candidate.name === name));
 
         if (!pkg) {
@@ -103,29 +104,46 @@ export class ModalController {
         document.body.style.overflow = 'hidden';
         this.resetContentScroll();
 
-        const nextHash: string = `#${encodeURIComponent(pkg.name)}`;
-        if (window.location.hash !== nextHash) history.pushState('', document.title, nextHash);
+        if (updateLocation) this.updatePackageLocation(pkg.name);
     }
 
-    openFromHash(): void {
-        const encodedName: string = window.location.hash.slice(1);
+    openFromUrl(): void {
+        const url: URL = new URL(window.location.href);
+        const queryName: string | null = url.searchParams.get('package');
 
-        if (!encodedName) {
-            if (this.isOpen()) this.close(false);
+        if (queryName !== null) {
+            this.permalinkMode = 'query';
+            this.open(queryName, false);
+
             return;
         }
 
-        this.open(decodeURIComponent(encodedName));
+        const encodedName: string = window.location.hash.slice(1);
+
+        if (!encodedName) {
+            this.permalinkMode = 'hash';
+            if (this.isOpen()) this.close(false);
+
+            return;
+        }
+
+        this.permalinkMode = 'hash';
+
+        try {
+            this.open(decodeURIComponent(encodedName), false);
+        } catch {
+            if (this.isOpen()) this.close(false);
+        }
     }
 
-    close(clearHash: boolean): void {
+    close(clearLocation: boolean): void {
         if (!this.isOpen()) return;
 
         this.resetContentScroll();
         this.modal.classList.remove('active');
 
         document.body.style.overflow = '';
-        if (clearHash && window.location.hash) history.pushState('', document.title, `${window.location.pathname}${window.location.search}`);
+        if (clearLocation) this.clearPackageLocation();
 
         window.scrollTo(0, this.pageScrollPosition);
     }
@@ -136,6 +154,33 @@ export class ModalController {
         window.requestAnimationFrame((): void => {
             this.modalContent.scrollTop = 0;
         });
+    }
+
+    private updatePackageLocation(packageName: string): void {
+        const url: URL = new URL(window.location.href);
+
+        if (this.permalinkMode === 'query') {
+            url.searchParams.set('package', packageName);
+            url.hash = '';
+        } else {
+            url.hash = encodeURIComponent(packageName);
+        }
+
+        const nextLocation: string = `${url.pathname}${url.search}${url.hash}`;
+        const currentLocation: string = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+        if (currentLocation !== nextLocation) history.pushState('', document.title, nextLocation);
+    }
+
+    private clearPackageLocation(): void {
+        const url: URL = new URL(window.location.href);
+        url.searchParams.delete('package');
+        url.hash = '';
+
+        const nextLocation: string = `${url.pathname}${url.search}${url.hash}`;
+        const currentLocation: string = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+        if (currentLocation !== nextLocation) history.pushState('', document.title, nextLocation);
     }
 
     private toDependencyItems(names: string[], packageNames: Set<string>): DependencyItem[] {
