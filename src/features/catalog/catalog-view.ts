@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import {
-    GITLAB_BASE
+    CODEBERG_BASE
 } from '../../config.js';
 
 import type {
@@ -97,7 +97,7 @@ export class CatalogView {
         for (const pkg of packages) {
             const markup: string = templateEnvironment.renderString(templates.packageCard, {
                 package: pkg,
-                gitlabBase: GITLAB_BASE
+                base: CODEBERG_BASE
             });
 
             fragment.append(document.createRange().createContextualFragment(markup));

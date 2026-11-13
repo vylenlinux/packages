@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 import {
-    GITLAB_BASE,
+    CODEBERG_BASE,
     SOURCE_LABELS
 } from '../../config.js';
 
@@ -93,7 +93,7 @@ export class ModalController {
 
         this.modalBody.innerHTML = templateEnvironment.renderString(templates.packageDetails, {
             package: pkg,
-            gitlabBase: GITLAB_BASE,
+            base: CODEBERG_BASE,
 
             dependencyItems,
             requiredByItems,

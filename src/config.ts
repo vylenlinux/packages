@@ -9,11 +9,11 @@ import type {
 export function defineRepository(id: string): RepositoryDefinition {
     return {
         id,
-        url: `https://gitlab.com/api/v4/projects/vylen%2Fports%2F${id}/repository/files/packages.json/raw`
+        url: `https://codeberg.org/api/v1/repos/vylen/${id}/contents/packages.json`
     };
 }
 
-export const GITLAB_BASE: string = 'https://gitlab.com/vylen/ports';
+export const CODEBERG_BASE: string = 'https://codeberg.org/vylen';
 export const ITEMS_PER_PAGE: number = 50;
 
 export const REPOSITORIES: readonly RepositoryDefinition[] = [
@@ -23,8 +23,6 @@ export const REPOSITORIES: readonly RepositoryDefinition[] = [
 ];
 
 export const SOURCE_LABELS: Record<SourceType, string> = {
-    url: 'URL',
-    git: 'Git',
-    file: 'File',
-    rename: 'Rename'
+    ext: 'External',
+    own: 'Own'
 };

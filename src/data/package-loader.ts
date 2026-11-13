@@ -58,7 +58,24 @@ export async function loadRepository(repository: RepositoryDefinition): Promise<
     });
 
     if (!response.ok) throw new Error(`HTTP ${response.status} while loading ${repository.id}`);
-    const data: unknown = await response.json();
+    const responseData: unknown = await response.json();
+    let data: unknown = responseData;
+
+    if (responseData && (typeof responseData === 'object') && ('content' in responseData)) {
+        const apiFile = responseData as {
+            content?: unknown;
+            encoding?: unknown;
+        };
+
+        if ((apiFile.encoding !== 'base64') || (typeof apiFile.content !== 'string')) {
+            throw new Error(`Invalid Codeberg API response for ${repository.id}`);
+        }
+
+        const binary: string = atob(apiFile.content.replace(/\s/g, ''));
+        const bytes: Uint8Array = Uint8Array.from(binary, (character: string): number => character.charCodeAt(0));
+
+        data = JSON.parse(new TextDecoder().decode(bytes));
+    }
 
     if (!Array.isArray(data)) throw new Error(`Invalid data format for ${repository.id}`);
     return data.filter((item: any): item is PackageData => Boolean(item && (typeof item === 'object'))).map((item: PackageData): Package => normalizePackage(item, repository)).filter((item: Package): boolean => (item.name.length > 0));
